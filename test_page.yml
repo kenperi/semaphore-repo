@@ -1,0 +1,22 @@
+---
+- name: Install Nginx and deploy a test page
+  hosts: web_servers
+  become: yes
+
+  tasks:
+    - name: Install Nginx
+      package:
+        name: nginx
+        state: present
+
+    - name: Deploy test page
+      copy:
+        src: /etc/nginx/pages/test_page.html
+        dest: /usr/share/nginx/html/index.html
+      notify: Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
